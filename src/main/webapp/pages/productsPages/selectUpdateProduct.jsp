@@ -8,7 +8,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Удаление продукта</title>
+    <title>Установить новую цену</title>
 </head>
 <body>
 <table>

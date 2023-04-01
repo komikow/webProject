@@ -1,7 +1,6 @@
 package by.it.academy.repositories;
 
 import by.it.academy.entity.Product;
-import by.it.academy.entity.User;
 import by.it.academy.services.Utils;
 import by.it.academy.util.JPAUtil;
 
@@ -18,16 +17,12 @@ public class ProductRepositoryImpl implements ProductRepository {
         int id = findIdByModel(modelToDelete);
         entityManager = new JPAUtil().getEntityManager();
         Product product = entityManager.find(Product.class, id);
-        transaction = entityManager.getTransaction();
-        transaction.begin();
-        entityManager.remove(product);
-        entityManager.getTransaction().commit();
-        entityManager.close();
+        Utils.deleteProductFromDB(entityManager, transaction, product);
     }
 
     @Override
     public void createProduct(Product product) {
-        Utils.add(product);
+        Utils.addNewProductToDB(entityManager, product);
     }
 
     @Override
@@ -51,6 +46,7 @@ public class ProductRepositoryImpl implements ProductRepository {
         entityManager.getTransaction().commit();
         entityManager.close();
         int foundProductById = 0;
+
         for (Product product : products) {
             if (product.getModel().equals(modelToDelete)) {
                 foundProductById = product.getProduct_id();
@@ -61,12 +57,12 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     @Override
     public void updateProduct(String modelToUpdate, int newPrice) {
-        entityManager = new JPAUtil().getEntityManager();
+        EntityManager entityManager = new JPAUtil().getEntityManager();
         int id = findIdByModel(modelToUpdate);
-        transaction = entityManager.getTransaction();
-        transaction.begin();
+        EntityTransaction transaction = entityManager.getTransaction();
         Product product = entityManager.find(Product.class, id);
         product.setPrice(newPrice);
+        transaction.begin();
         entityManager.persist(product);
         transaction.commit();
         entityManager.close();

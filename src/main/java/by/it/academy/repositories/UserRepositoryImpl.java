@@ -14,32 +14,29 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public void createUser(User user) {
-        Utils.add(user);
+        Utils.addNewUserToDB(user);
     }
 
     @Override
-    public void deleteUser(String loginToDelete) {
+    public int deleteUser(String loginToDelete) {
         entityManager = new JPAUtil().getEntityManager();
         int id = findIdByLogin(loginToDelete);
-        User user = entityManager.find(User.class, id);
-        transaction = entityManager.getTransaction();
-        transaction.begin();
-        entityManager.remove(user);
-        entityManager.getTransaction().commit();
-        entityManager.close();
+        if (id > 0) {
+            User user = entityManager.find(User.class, id);
+            Utils.deleteUserByRepository(entityManager, transaction, user);
+        } else {
+            return id;
+        }
+        return id;
     }
 
     @Override
     public void updateUser(String loginToUpdate, String newPassword) {
         entityManager = new JPAUtil().getEntityManager();
         int id = findIdByLogin(loginToUpdate);
-        transaction = entityManager.getTransaction();
-        transaction.begin();
         User user = entityManager.find(User.class, id);
         user.setPassword(newPassword);
-        entityManager.persist(user);
-        transaction.commit();
-        entityManager.close();
+        Utils.updateUserByRepository(entityManager, transaction, user);
     }
 
     @Override

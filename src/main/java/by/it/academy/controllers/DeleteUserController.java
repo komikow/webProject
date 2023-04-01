@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import static by.it.academy.services.Constants.*;
+import static by.it.academy.services.Constants.ERROR_LOGIN;
 
 @WebServlet(urlPatterns = {USER_URL_DELETE}, loadOnStartup = 0)
 public class DeleteUserController extends HttpServlet {
@@ -23,8 +24,11 @@ public class DeleteUserController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String loginToDelete = req.getParameter(LOGIN_TO_DELETE);
-        userService.deleteUser(loginToDelete);
-        req.getRequestDispatcher(DELETE_USER_PAGE).forward(req, resp);
+        if (userService.deleteUser(loginToDelete) > 0) {
+            req.getRequestDispatcher(DELETE_USER_PAGE).forward(req, resp);
+        } else {
+            req.getRequestDispatcher(ERROR_LOGIN).forward(req, resp);
+        }
     }
 
     @Override

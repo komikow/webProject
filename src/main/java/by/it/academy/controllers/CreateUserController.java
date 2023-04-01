@@ -1,10 +1,10 @@
 package by.it.academy.controllers;
 
-import by.it.academy.entity.User;
 import by.it.academy.repositories.UserRepository;
 import by.it.academy.repositories.UserRepositoryImpl;
 import by.it.academy.services.UserService;
 import by.it.academy.services.UserServiceImpl;
+import by.it.academy.services.Utils;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -23,13 +23,7 @@ public class CreateUserController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String firstName = req.getParameter(NAME);
-        String secondName = req.getParameter(SURNAME);
-        int age = Integer.parseInt(req.getParameter(AGE));
-        String login = req.getParameter(LOGIN);
-        String password = req.getParameter(PASSWORD);
-        User user = new User(firstName, secondName, age, login, password);
-        userService.createUser(user);
+        userService.createUser(Utils.createNewUser(req));
         req.getRequestDispatcher(PAGES_REGISTRATION_TRUE).forward(req, resp);
     }
 

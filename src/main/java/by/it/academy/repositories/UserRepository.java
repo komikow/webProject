@@ -8,7 +8,7 @@ public interface UserRepository {
     void createUser(User user);
 //    void createUser(String firstName, String secondName, int age, String login, String password);
 
-    void deleteUser(String loginToDelete);
+    int deleteUser(String loginToDelete);
 
     List<User> readUsers();
 

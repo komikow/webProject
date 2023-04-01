@@ -1,6 +1,5 @@
 package by.it.academy.controllers;
 
-import by.it.academy.entity.Product;
 import by.it.academy.repositories.ProductRepository;
 import by.it.academy.repositories.ProductRepositoryImpl;
 import by.it.academy.services.ProductService;
@@ -24,13 +23,7 @@ public class CreateProductController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String model = req.getParameter(PRODUCT_MODEL);
-        String specifications = req.getParameter(PRODUCT_SPECIFICATIONS);
-        int guarantee = Integer.parseInt(req.getParameter(PRODUCT_GUARANTEE));
-        int price = Integer.parseInt(req.getParameter(PRODUCT_PRICE));
-        int quantity = Integer.parseInt(req.getParameter(PRODUCT_QUANTITY));
-        Product product = new Product(model, specifications, guarantee, price, quantity);
-        productService.createProduct(product);
+        productService.createProduct(Utils.createNewProduct(req));
         req.getRequestDispatcher(PRODUCT_ADD_TRUE_PAGE).forward(req, resp);
     }
 

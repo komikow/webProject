@@ -16,9 +16,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteUser(String loginToDelete) {
+    public int deleteUser(String loginToDelete) {
         userRepository = new UserRepositoryImpl();
-        userRepository.deleteUser(loginToDelete);
+        return userRepository.deleteUser(loginToDelete);
     }
 
     @Override

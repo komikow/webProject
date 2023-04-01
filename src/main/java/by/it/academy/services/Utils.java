@@ -1,37 +1,82 @@
 package by.it.academy.services;
 
-import by.it.academy.repositories.ProductRepository;
-import by.it.academy.repositories.ProductRepositoryImpl;
+import by.it.academy.entity.Product;
+import by.it.academy.entity.User;
 import by.it.academy.util.JPAUtil;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 
-import static by.it.academy.services.Constants.PRODUCT_REPOSITORY;
-import static by.it.academy.services.Constants.PRODUCT_SERVICE;
+import static by.it.academy.services.Constants.*;
 
 public class Utils {
-    public static EntityManager entityManager;
-    public static EntityTransaction transaction;
-    public static ProductService productService;
-    public static ProductRepository productRepository;
 
     public static void add(Object o) {
-        entityManager = new JPAUtil().getEntityManager();
+        EntityManager entityManager = new JPAUtil().getEntityManager();
         entityManager.getTransaction().begin();
         entityManager.merge(o);
         entityManager.getTransaction().commit();
         entityManager.close();
     }
 
-    public static void init(ServletConfig config) throws ServletException {
-        productService = (ProductServiceImpl) config
-                .getServletContext()
-                .getAttribute(PRODUCT_SERVICE);
-        productRepository = (ProductRepositoryImpl) config
-                .getServletContext()
-                .getAttribute(PRODUCT_REPOSITORY);
+    public static Product createNewProduct(HttpServletRequest req) {
+        String model = req.getParameter(PRODUCT_MODEL);
+        String specifications = req.getParameter(PRODUCT_SPECIFICATIONS);
+        int guarantee = Integer.parseInt(req.getParameter(PRODUCT_GUARANTEE));
+        int price = Integer.parseInt(req.getParameter(PRODUCT_PRICE));
+        int quantity = Integer.parseInt(req.getParameter(PRODUCT_QUANTITY));
+        Product product = new Product(model, specifications, guarantee, price, quantity);
+        return product;
+    }
+
+    public static User createNewUser(HttpServletRequest req) {
+        String firstName = req.getParameter(NAME);
+        String secondName = req.getParameter(SURNAME);
+        int age = Integer.parseInt(req.getParameter(AGE));
+        String login = req.getParameter(LOGIN);
+        String password = req.getParameter(PASSWORD);
+        User user = new User(firstName, secondName, age, login, password);
+        return user;
+    }
+
+    public static void deleteUserByRepository(EntityManager em, EntityTransaction transaction, Object o) {
+        transaction = em.getTransaction();
+        transaction.begin();
+        em.remove(o);
+        em.getTransaction().commit();
+        em.close();
+    }
+
+    public static void updateUserByRepository(EntityManager entityManager, EntityTransaction transaction, Object o) {
+        transaction = entityManager.getTransaction();
+        transaction.begin();
+        entityManager.persist(o);
+        transaction.commit();
+        entityManager.close();
+    }
+
+    public static void addNewProductToDB(EntityManager entityManager, Product product) {
+        entityManager = new JPAUtil().getEntityManager();
+        entityManager.getTransaction().begin();
+        entityManager.merge(product);
+        entityManager.getTransaction().commit();
+        entityManager.close();
+    }
+
+    public static void deleteProductFromDB(EntityManager entityManager, EntityTransaction transaction, Object o) {
+        transaction = entityManager.getTransaction();
+        transaction.begin();
+        entityManager.remove(o);
+        entityManager.getTransaction().commit();
+        entityManager.close();
+    }
+
+    public static void addNewUserToDB(Object o) {
+        EntityManager entityManager = new JPAUtil().getEntityManager();
+        entityManager.getTransaction().begin();
+        entityManager.merge(o);
+        entityManager.getTransaction().commit();
+        entityManager.close();
     }
 }

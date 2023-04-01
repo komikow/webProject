@@ -8,6 +8,7 @@ public class Constants {
     public static final String USERS_PAGE = "/pages/user/userPage.jsp";
     public static final String ERROR_AUTHORIZATION = "/pages/errorsPages/authorization_error.jsp";
     public static final String ERROR_UNIQ_LOGIN = "/pages/errorsPages/errorNoUniqLogin.jsp";
+    public static final String ERROR_LOGIN = "/pages/errorsPages/errorNoUniqLogin.jsp";
     public static final String PAGES_REGISTRATION_TRUE = "/pages/servicesPages/successfulRegistration.jsp";
     public static final String PAGES_ADD_PRODUCT = "/pages/products/addProducts.jsp";
     public static final String PRODUCTS_PAGE = "/pages/productsPages/allProducts.jsp";
@@ -83,4 +84,11 @@ public class Constants {
     public static final String LOGIN_TO_UPDATE = "loginToUpdate";
     public static final int NULL_VALUE = 0;
     public static final int NOT_NULL_VALUE = 1;
+    public static final int NOT_UNIQ_LOGIN = 0;
+    public static final int UNIQ_LOGIN = 1;
+    public static final int NOT_VALIDATE_FIELD = 0;
+    public static final int VALIDATE_FIELD = 1;
+    public static final int EMPTY_FIELD = 0;
+    public static final int NOT_EMPTY_FIELD = 1;
+
 }

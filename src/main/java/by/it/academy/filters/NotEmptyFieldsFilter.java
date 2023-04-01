@@ -25,6 +25,20 @@ public class NotEmptyFieldsFilter extends HttpFilter {
     private UserService userService;
     private UserRepository userRepository;
 
+    //    @Override
+//    protected void doFilter(HttpServletRequest req, HttpServletResponse res, FilterChain chain) throws IOException, ServletException {
+////        String firstName = req.getParameter(NAME);
+////        String secondName = req.getParameter(SURNAME);
+////        int age = Integer.parseInt(req.getParameter(AGE));
+//        String login = req.getParameter(LOGIN);
+////        String password = req.getParameter(PASSWORD);
+////        User newUser = new User(firstName, secondName, age, login, password);
+//        if (similarityCheck(req, login) == 1) {
+//            req.getRequestDispatcher(USERS_URL_CREATE).forward(req, res);
+//        } else if (similarityCheck(req, login) == 0) {
+//            req.getRequestDispatcher(ERROR_UNIQ_LOGIN).forward(req, res);
+//        }
+//    }
     @Override
     protected void doFilter(HttpServletRequest req, HttpServletResponse res,
                             FilterChain chain) throws IOException, ServletException {
@@ -35,24 +49,16 @@ public class NotEmptyFieldsFilter extends HttpFilter {
             String login = req.getParameter(LOGIN);
             String password = req.getParameter(PASSWORD);
             User newUser = new User(firstName, secondName, age, login, password);
-            if (checkFieldsNewUser(newUser) == 0) {
+            if (checkFieldsNewUser(newUser) == NOT_VALIDATE_FIELD) {
                 req.getRequestDispatcher(PAGE_ERRORS_FIELDS).forward(req, res);
             } else if
-            (ifNotEmptyFieldsNewUser(newUser) == false) {
+            (ifNotEmptyFieldsNewUser(newUser) == EMPTY_FIELD) {
                 req.getRequestDispatcher(ERROR_AUTHORIZATION).forward(req, res);
             } else {
-                EntityManager entityManager = new JPAUtil().getEntityManager();
-                entityManager.getTransaction().begin();
-                List<User> users = entityManager.createQuery("from User", User.class)
-                        .getResultList();
-                entityManager.getTransaction().commit();
-                entityManager.close();
-                for (User user : users) {
-                    if (user.getLogin().equals(login)) {
-                        req.getRequestDispatcher(ERROR_UNIQ_LOGIN).forward(req, res);
-                    } else {
-                        req.getRequestDispatcher(USERS_URL_CREATE).forward(req, res);
-                    }
+                if (similarityCheck(req, login) == UNIQ_LOGIN) {
+                    req.getRequestDispatcher(USERS_URL_CREATE).forward(req, res);
+                } else if (similarityCheck(req, login) == NOT_UNIQ_LOGIN) {
+                    req.getRequestDispatcher(ERROR_UNIQ_LOGIN).forward(req, res);
                 }
             }
         } catch (NumberFormatException e) {
@@ -64,8 +70,8 @@ public class NotEmptyFieldsFilter extends HttpFilter {
         }
     }
 
-    private boolean ifNotEmptyFieldsNewUser(User user) {
-        boolean isNotEmpty = true;
+    private int ifNotEmptyFieldsNewUser(User user) {
+        int isNotEmpty = NOT_EMPTY_FIELD;
         if (user.getFirstName().equals(DOUBLE_QUOTES)
                 || user.getFirstName().isEmpty()
                 || user.getSecondName().equals(DOUBLE_QUOTES)
@@ -76,7 +82,7 @@ public class NotEmptyFieldsFilter extends HttpFilter {
                 || user.getPassword().equals(DOUBLE_QUOTES)
                 || user.getPassword().isEmpty()
         ) {
-            isNotEmpty = false;
+            isNotEmpty = EMPTY_FIELD;
         }
         return isNotEmpty;
     }
@@ -94,6 +100,22 @@ public class NotEmptyFieldsFilter extends HttpFilter {
             return isCorrectField;
         }
         return isCorrectField;
+    }
+
+    private int similarityCheck(HttpServletRequest req, String login) {
+        int isUniqLogin = UNIQ_LOGIN;
+        EntityManager entityManager = new JPAUtil().getEntityManager();
+        entityManager.getTransaction().begin();
+        List<User> users = entityManager.createQuery("from User", User.class)
+                .getResultList();
+        entityManager.getTransaction().commit();
+        entityManager.close();
+        for (User user : users) {
+            if (user.getLogin().contentEquals(login)) {
+                isUniqLogin = NOT_UNIQ_LOGIN;
+            }
+        }
+        return isUniqLogin;
     }
 
     @Override

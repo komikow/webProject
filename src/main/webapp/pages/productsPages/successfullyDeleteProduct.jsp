@@ -14,6 +14,7 @@
 <div>Товар удален.</div>
 
 <br>
+<div><a href="/pages/adminPages/adminPage.jsp">Продолжить работу</a></div>
 <div><a href="/pages/adminPages/adminPage.jsp">Вернуться на страницку администратора</a></div>
 </body>
 </html>

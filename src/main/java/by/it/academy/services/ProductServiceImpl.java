@@ -29,6 +29,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void updateProduct(String modelToUpdate, int newPrice) {
+        productRepository = new ProductRepositoryImpl();
         productRepository.updateProduct(modelToUpdate, newPrice);
     }
 }

@@ -15,6 +15,7 @@
 
 <br>
 <div><a href="/pages/productsPages/addProducts.jsp">Добавить товар</a></div>
+<div><a href="/pages/adminPages/adminPage.jsp">Продолжить работу</a></div>
 <div><a href="../../../index.jsp">Выход</a></div>
 </body>
 </html>
