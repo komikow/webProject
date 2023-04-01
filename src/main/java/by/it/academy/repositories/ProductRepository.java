@@ -6,8 +6,6 @@ import java.util.List;
 
 public interface ProductRepository {
     void createProduct(Product product);
-//    void createProduct(String model, String specifications,
-//                       int guarantee, int price, int quantity);
 
     List<Product> readProducts();
 

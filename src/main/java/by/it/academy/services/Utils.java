@@ -8,6 +8,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.servlet.http.HttpServletRequest;
 
+import java.util.List;
+
 import static by.it.academy.services.Constants.*;
 
 public class Utils {
@@ -78,5 +80,20 @@ public class Utils {
         entityManager.merge(o);
         entityManager.getTransaction().commit();
         entityManager.close();
+    }
+    public static int similarityCheck(HttpServletRequest req, String login) {
+        int isUniqLogin = UNIQ_LOGIN;
+        EntityManager entityManager = new JPAUtil().getEntityManager();
+        entityManager.getTransaction().begin();
+        List<User> users = entityManager.createQuery("from User", User.class)
+                .getResultList();
+        entityManager.getTransaction().commit();
+        entityManager.close();
+        for (User user : users) {
+            if (user.getLogin().equals(login)) {
+                isUniqLogin = NOT_UNIQ_LOGIN;
+            }
+        }
+        return isUniqLogin;
     }
 }

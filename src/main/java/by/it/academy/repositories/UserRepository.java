@@ -6,7 +6,6 @@ import java.util.List;
 
 public interface UserRepository {
     void createUser(User user);
-//    void createUser(String firstName, String secondName, int age, String login, String password);
 
     int deleteUser(String loginToDelete);
 
